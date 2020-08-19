@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Languages on Last Known Good Configuration</title>
+    <link>https://AmyShackles.github.io/categories/languages/</link>
+    <description>Recent content in Languages on Last Known Good Configuration</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 19 Aug 2020 15:02:59 -0700</lastBuildDate>
+    
+	<atom:link href="https://AmyShackles.github.io/categories/languages/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Getting Going With Go Part I</title>
+      <link>https://AmyShackles.github.io/post/getting-going-with-go-part-i/</link>
+      <pubDate>Wed, 19 Aug 2020 15:02:59 -0700</pubDate>
+      
+      <guid>https://AmyShackles.github.io/post/getting-going-with-go-part-i/</guid>
+      <description>After hearing a lot about the Go programming language and its similarity to C, I decided to finally get around to trying to learn it (I&amp;rsquo;m currently watching Brenna Martenson&amp;rsquo;s course on Frontend Masters, &amp;ldquo;Go for JavaScript Developers&amp;rdquo;). And since the best way to ensure you&amp;rsquo;ve actually learned a thing is to teach a thing, I decided to start this blog. So join me as I muddle through the early stages of learning a language.</description>
+    </item>
+    
+  </channel>
+</rss>

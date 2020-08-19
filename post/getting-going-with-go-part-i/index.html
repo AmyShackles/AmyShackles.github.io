@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Getting Going With Go Part I - Last Known Good Configuration</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Amy Shackles" /><meta name="description" content="After hearing a lot about the Go programming language and its similarity to C, I decided to finally get around to trying to learn it (I&amp;rsquo;m currently watching Brenna Martenson&amp;rsquo;s course on Frontend Masters, &amp;ldquo;Go for JavaScript Developers&amp;rdquo;). And since the best way to ensure you&amp;rsquo;ve actually learned a thing is to teach a thing, I decided to start this blog. So join me as I muddle through the early stages of learning a language." /><meta name="keywords" content="blog, software development" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://AmyShackles.github.io/post/getting-going-with-go-part-i/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="Getting Going With Go Part I" />
+<meta property="og:description" content="After hearing a lot about the Go programming language and its similarity to C, I decided to finally get around to trying to learn it (I&rsquo;m currently watching Brenna Martenson&rsquo;s course on Frontend Masters, &ldquo;Go for JavaScript Developers&rdquo;). And since the best way to ensure you&rsquo;ve actually learned a thing is to teach a thing, I decided to start this blog. So join me as I muddle through the early stages of learning a language." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://AmyShackles.github.io/post/getting-going-with-go-part-i/" />
+<meta property="article:published_time" content="2020-08-19T15:02:59-07:00" />
+<meta property="article:modified_time" content="2020-08-19T15:02:59-07:00" />
+<meta itemprop="name" content="Getting Going With Go Part I">
+<meta itemprop="description" content="After hearing a lot about the Go programming language and its similarity to C, I decided to finally get around to trying to learn it (I&rsquo;m currently watching Brenna Martenson&rsquo;s course on Frontend Masters, &ldquo;Go for JavaScript Developers&rdquo;). And since the best way to ensure you&rsquo;ve actually learned a thing is to teach a thing, I decided to start this blog. So join me as I muddle through the early stages of learning a language.">
+<meta itemprop="datePublished" content="2020-08-19T15:02:59-07:00" />
+<meta itemprop="dateModified" content="2020-08-19T15:02:59-07:00" />
+<meta itemprop="wordCount" content="1860">
+
+
+
+<meta itemprop="keywords" content="fmt,arrays,switch,range,for loops," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Getting Going With Go Part I"/>
+<meta name="twitter:description" content="After hearing a lot about the Go programming language and its similarity to C, I decided to finally get around to trying to learn it (I&rsquo;m currently watching Brenna Martenson&rsquo;s course on Frontend Masters, &ldquo;Go for JavaScript Developers&rdquo;). And since the best way to ensure you&rsquo;ve actually learned a thing is to teach a thing, I decided to start this blog. So join me as I muddle through the early stages of learning a language."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Last Known Good Configuration</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Last Known Good Configuration</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Getting Going With Go Part I</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-08-19 </span>
+        <div class="post-category">
+            <a href="/categories/go/"> Go </a>
+            <a href="/categories/languages/"> Languages </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#anatomy-of-a-file">Anatomy of a File</a></li>
+    <li><a href="#loops">Loops</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#for-loops">For Loops</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#fmt-package">fmt package</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#writing-to-standard-output">Writing to standard output</a></li>
+            <li><a href="#writing-to-external-file">Writing to external file</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#types-in-go">Types in Go</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#how-do-you-check-the-type-of-a-variable-in-go">How do you check the type of a variable in Go?</a></li>
+            <li><a href="#type-casting-changing-type">Type Casting (Changing Type)</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#declaring-variables">Declaring Variables</a></li>
+    <li><a href="#switch-statements">Switch Statements</a></li>
+    <li><a href="#range">Range</a></li>
+    <li><a href="#anatomy-of-a-function">Anatomy of a Function</a></li>
+    <li><a href="#arrays">Arrays</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>After hearing a lot about the Go programming language and its similarity to C, I decided to finally get around to trying to learn it (I&rsquo;m currently watching Brenna Martenson&rsquo;s course on Frontend Masters, <a href="https://frontendmasters.com/courses/go-for-js-devs">&ldquo;Go for JavaScript Developers&rdquo;</a>).  And since the best way to ensure you&rsquo;ve actually learned a thing is to teach a thing, I decided to start this blog.  So join me as I muddle through the early stages of learning a language.</p>
+<p>In this blog post, we&rsquo;ll cover the anatomy of a Go file, for loops, some functions imported from the &ldquo;fmt&rdquo; package, switches, the range keyword, the anatomy of a function, and arrays.</p>
+<h1 id="anatomy-of-a-file">Anatomy of a File</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span> <span class="c1">// Every program needs a package main.  Aside from packiage main, the package name is the name of the directory the file appears in
+</span><span class="c1"></span>
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span> <span class="c1">// Import packages!
+</span><span class="c1"></span>
+<span class="nx">function</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span> <span class="c1">// Every program needs a main function
+</span><span class="c1"></span>    	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Hello world&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Typing <code>go run &lt;file&gt;</code> in a terminal will execute the main function in the file.</p>
+<h1 id="loops">Loops</h1>
+<h3 id="for-loops">For Loops</h3>
+<p>If you&rsquo;re coming to Go from a language like JavaScript, this syntax will loop familiar to you (minus the parentheses):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">for</span> <span class="nx">init</span><span class="p">;</span> <span class="nx">condition</span><span class="p">;</span> <span class="nx">post</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="c1">// If an intializer has already been declared, you can leave a semicolon for the initializer:
+</span><span class="c1"></span>
+<span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>This is synonymous with JavaScript&rsquo;s <code>while</code> loop</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">for</span> <span class="nx">condition</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Instead of creating a while loop and passing in <code>true</code>, Go has a syntax for declaring an infinite loop:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">for</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="fmt-package">fmt package</h1>
+<p>I&rsquo;m going to cover some of the functions available in the <code>fmt</code> package, but this isn&rsquo;t an exhaustive list and you can learn more at <a href="https://golang.org/pkg/fmt/">golang.org/pkg/fmt</a></p>
+<h3 id="writing-to-standard-output">Writing to standard output</h3>
+<p><code>fmt.Print(a ...interface{}) (n int, err error)</code> writes to standard output.  It returns the number of bytes written and any write error that occurred.</p>
+<p><code>fmt.Println(a ...interface{}) (n int, err error)</code> writes to standard output, with a newline appended.  It returns two values, an int and an error.  The int is the number of bytes that were written to standard output.  The error is any write error that occurred</p>
+<p>If you&rsquo;re familiar with C, the Printf function is similar to printf in the use of format specifiers to indicate the type to print when passing in variables
+<code>fmt.Printf(format string, a ... interface{}) (n int, err error)</code> also writes to standard output, but does not include a newline.  Like Println, it returns the number of bytes written and any write error that occurred.</p>
+<h3 id="writing-to-external-file">Writing to external file</h3>
+<p><code>fmt.Fprint(w io.Writer, a ...interface{})(n int, err error)</code> is like <code>fmt.Print</code> but instead of writing to standard output, it writes to an external file <code>w</code>.</p>
+<p><code>fmt.Fprintln(w. io.Writer, a ...interface{}) (n int, err error)</code> is like <code>fmt.Println</code> but instead of writing to standard output, it writes to an external file <code>w</code>.</p>
+<p><code>fmt.Fprintf(w. io.Writer, format string, a ...interface{}) (n int, err error)</code> is like <code>fmt.Printf</code> but instead of writing to standard output, it writes to an external file <code>w</code>.</p>
+<h1 id="types-in-go">Types in Go</h1>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Type Options</th>
+<th>Example Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>INTEGER</td>
+<td>int, int8, int16, int32, int64 uint, uint8, uint16, uint32, uint64</td>
+<td>var age int = 21</td>
+</tr>
+<tr>
+<td>FLOAT</td>
+<td>float32, float64 complex64, complex128</td>
+<td>var gpa float64 = 4.0</td>
+</tr>
+<tr>
+<td>STRING</td>
+<td>string</td>
+<td>var plant string = &ldquo;ficus&rdquo;</td>
+</tr>
+<tr>
+<td>BOOLEAN</td>
+<td>&amp;&amp;, ||, !, &lt;, &lt;=, &gt;=, ==, !=</td>
+<td>var canDrink bool = age &gt; 21</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-do-you-check-the-type-of-a-variable-in-go">How do you check the type of a variable in Go?</h3>
+<p>In JavaScript, you would use <code>typeof variableName</code>.</p>
+<p>In Go, you import the <code>reflect</code> package and use its <code>TypeOf(i interface{}) Type</code> function, which will return the reflection Type that represents the dynamic type of the variable passed in.</p>
+<p>Example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+    <span class="s">&#34;reflect&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">hope</span> <span class="o">:=</span> <span class="s">&#34;Springs eternal&#34;</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">reflect</span><span class="p">.</span><span class="nf">TypeOf</span><span class="p">(</span><span class="nx">hope</span><span class="p">))</span> <span class="c1">// &#34;string&#34;
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="type-casting-changing-type">Type Casting (Changing Type)</h3>
+<p>In C, we typecast by using the cast operator (which is just the name of a type surrounded by parentheses), like:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">array</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">};</span>
+    <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="k">sizeof</span> <span class="n">array</span> <span class="o">/</span> <span class="k">sizeof</span> <span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;Average = %f</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">total</span><span class="o">/</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="n">length</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>In Go, it&rsquo;s a similar idea except instead of the parentheses surrounding the type you&rsquo;re casting to, you pass the variable to the type.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">scores</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">float64</span><span class="p">{</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">33.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">}</span>
+	<span class="nx">total</span> <span class="o">:=</span> <span class="mf">0.0</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">val</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">scores</span> <span class="p">{</span>
+		<span class="nx">total</span> <span class="o">+=</span> <span class="nx">val</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">total</span> <span class="o">/</span> <span class="nb">float64</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nx">scores</span><span class="p">)))</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="declaring-variables">Declaring Variables</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">
+<span class="c1">// These declarations can be used anywhere
+</span><span class="c1"></span><span class="kd">var</span> <span class="p">&lt;</span><span class="nx">name</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="kd">type</span><span class="p">&gt;</span> <span class="p">=</span> <span class="p">&lt;</span><span class="nx">value</span><span class="p">&gt;</span> <span class="c1">// Explicitly declare type and set variable to a value
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">name</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&#34;Amy&#34;</span>
+
+<span class="kd">var</span> <span class="p">&lt;</span><span class="nx">name</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="kd">type</span><span class="p">&gt;</span> <span class="c1">// Explicitly declare variable to be of a certain type
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">name</span> <span class="kt">string</span>
+
+<span class="kd">var</span> <span class="p">&lt;</span><span class="nx">name</span><span class="p">&gt;</span> <span class="p">=</span> <span class="p">&lt;</span><span class="nx">value</span><span class="p">&gt;</span> <span class="c1">// Relies on Go&#39;s type inference to determine type based on the right-hand assignment
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">name</span> <span class="p">=</span> <span class="s">&#34;Amy&#34;</span>
+
+<span class="c1">// This syntax can only be used in a function block, and is the most commonly used form of variable declaration:
+</span><span class="c1"></span><span class="p">&lt;</span><span class="nx">name</span><span class="p">&gt;</span> <span class="o">:=</span> <span class="p">&lt;</span><span class="nx">value</span><span class="p">&gt;</span> <span class="c1">// Relies on Go&#39;s type inference to determine type based on right-hand assignemnt
+</span><span class="c1"></span><span class="nx">name</span> <span class="o">:=</span> <span class="s">&#34;Amy&#34;</span>
+
+<span class="c1">// Declaring multiple values
+</span><span class="c1"></span><span class="kd">var</span> <span class="p">&lt;</span><span class="nx">name1</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="nx">name2</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="kd">type</span><span class="p">&gt;</span> <span class="p">=</span> <span class="p">&lt;</span><span class="nx">value1</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="nx">value2</span><span class="p">&gt;</span>
+<span class="kd">var</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">cityIMiss</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&#34;Amy&#34;</span><span class="p">,</span> <span class="s">&#34;Derby&#34;</span> <span class="c1">// Have to be of same type
+</span><span class="c1"></span>
+<span class="kd">var</span> <span class="p">&lt;</span><span class="nx">name1</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="nx">name2</span><span class="p">&gt;</span> <span class="p">=</span> <span class="p">&lt;</span><span class="nx">value1</span><span class="p">&gt;,</span> <span class="p">&lt;</span><span class="nx">value2</span><span class="p">&gt;</span>
+<span class="kd">var</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">cityIMiss</span> <span class="p">=</span> <span class="s">&#34;Amy&#34;</span><span class="p">,</span> <span class="s">&#34;Derby&#34;</span> <span class="c1">// Can be different types
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">age</span> <span class="p">=</span> <span class="s">&#34;Amy&#34;</span><span class="p">,</span> <span class="mi">31</span>
+
+<span class="kd">var</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nx">name1</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">type1</span><span class="p">&gt;</span> <span class="p">=</span> <span class="p">&lt;</span><span class="nx">value1</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nx">name2</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">type2</span><span class="p">&gt;</span> <span class="p">=</span> <span class="p">&lt;</span><span class="nx">value2</span><span class="p">&gt;</span>
+<span class="p">)</span>
+
+<span class="kd">var</span> <span class="p">(</span>
+    <span class="nx">name</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&#34;Amy&#34;</span>
+    <span class="nx">age</span> <span class="kt">int</span> <span class="p">=</span> <span class="mi">31</span>
+<span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="switch-statements">Switch Statements</h1>
+<p>In JavaScript, if you want to do a specific thing if X, Y, or Z are true, you have to list them out as separate cases and stack them:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kr">const</span> <span class="nx">animal</span> <span class="o">=</span> <span class="s2">&#34;cat&#34;</span>
+<span class="k">switch</span> <span class="p">(</span><span class="nx">animal</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="s2">&#34;cat&#34;</span><span class="o">:</span>
+    <span class="k">case</span> <span class="s2">&#34;dog&#34;</span><span class="o">:</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;That&#39;s a totally normal pet.&#34;</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="s2">&#34;bird&#34;</span><span class="o">:</span>
+    <span class="k">case</span> <span class="s2">&#34;fish&#34;</span><span class="o">:</span>
+    <span class="k">case</span> <span class="s2">&#34;guinea pig&#34;</span><span class="o">:</span>
+    <span class="k">case</span> <span class="s2">&#34;chinchilla&#34;</span><span class="o">:</span>
+    <span class="k">case</span> <span class="s2">&#34;snake&#34;</span><span class="o">:</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;It&#39;s a little weird, but okay.&#34;</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="s2">&#34;turtle&#34;</span><span class="o">:</span>
+    <span class="k">case</span> <span class="s2">&#34;prairie dog&#34;</span><span class="o">:</span>
+    <span class="k">case</span> <span class="s2">&#34;tarantula&#34;</span><span class="o">:</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;That&#39;s less than normal.&#34;</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">default</span><span class="o">:</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;I have no words.&#34;</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>In Go, you can just include it in the same case.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">animal</span> <span class="o">:=</span> <span class="s">&#34;cat&#34;</span>
+<span class="k">switch</span> <span class="nx">animal</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="s">&#34;cat&#34;</span><span class="p">,</span> <span class="s">&#34;dog&#34;</span><span class="p">:</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;That&#39;s a totally normal pet.&#34;</span><span class="p">);</span>
+    <span class="k">case</span> <span class="s">&#34;bird&#34;</span><span class="p">,</span> <span class="s">&#34;fish&#34;</span><span class="p">,</span> <span class="s">&#34;guinea pig&#34;</span><span class="p">,</span> <span class="s">&#34;chinchilla&#34;</span><span class="p">,</span> <span class="s">&#34;snake&#34;</span><span class="p">:</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;It&#39;s a little weird, but okay.&#34;</span><span class="p">);</span>
+    <span class="k">case</span> <span class="s">&#34;turtle&#34;</span><span class="p">,</span> <span class="s">&#34;prairie dog&#34;</span><span class="p">,</span> <span class="s">&#34;tarantula&#34;</span><span class="p">:</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;That&#39;s less than normal&#34;</span><span class="p">);</span>
+    <span class="k">default</span><span class="p">:</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;I have no words.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Switch statements don&rsquo;t even need an expression, so it&rsquo;s possible (and dogmatic) to write if/else if/else statements as switches in Go.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">unhex</span><span class="p">(</span><span class="nx">c</span> <span class="kt">byte</span><span class="p">)</span> <span class="kt">byte</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="sc">&#39;0&#39;</span> <span class="o">&lt;=</span> <span class="nx">c</span> <span class="o">&amp;&amp;</span> <span class="nx">c</span> <span class="o">&lt;=</span> <span class="sc">&#39;9&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nx">c</span> <span class="o">-</span> <span class="sc">&#39;0&#39;</span>
+        <span class="k">case</span> <span class="sc">&#39;a&#39;</span> <span class="o">&lt;=</span> <span class="nx">c</span> <span class="o">&amp;&amp;</span> <span class="nx">c</span> <span class="o">&lt;=</span> <span class="sc">&#39;f&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nx">c</span> <span class="o">-</span> <span class="sc">&#39;a&#39;</span> <span class="o">+</span> <span class="mi">10</span>
+        <span class="k">case</span> <span class="sc">&#39;A&#39;</span> <span class="o">&lt;=</span> <span class="nx">c</span> <span class="o">&amp;&amp;</span> <span class="nx">c</span> <span class="o">&lt;=</span> <span class="sc">&#39;F&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nx">c</span> <span class="o">-</span> <span class="sc">&#39;A&#39;</span> <span class="o">+</span> <span class="mi">10</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Unlike in JavaScript and C-based languages, switch statements in Go don&rsquo;t have automatic fallthrough.  This means there is no need for break statements at every level.  In fact, if you want to intentionally fall through from one case to the next, you need to specifically use the <code>fallthrough</code> keyword at the end of the case statement, and it only falls through one level.  Note that allowing it to fall through does not cause it to begin evaluating subsequent statements &ndash; it merely skips the evaluation and does the action attached to that condition.</p>
+<h1 id="range">Range</h1>
+<p>The <code>range</code> keyword is used to iterate over a slice or map.  When ranging over a slice, two values are returned for each iteration - the index and a copy of the element at that index (in the case of strings, this means the Unicode code point for the element at that index).</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">letter</span> <span class="o">:=</span> <span class="k">range</span> <span class="s">&#34;This is a sentence&#34;</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="nx">letter</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// 841041051153210511532973211510111011610111099101
+</span><span class="c1"></span>
+<span class="c1">// In order to get the string value (and not codepoint), type case:
+</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">letter</span> <span class="o">:=</span> <span class="k">range</span> <span class="s">&#34;This is a sentence&#34;</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">letter</span><span class="p">))</span>
+	<span class="p">}</span>
+<span class="c1">// This is a sentence
+</span></code></pre></td></tr></table>
+</div>
+</div><p>Note:  Go does not let you declare variables and then not use them.  For these occasions, you can use an underscore to tell the compiler that you have no need for that particular variable.</p>
+<h1 id="anatomy-of-a-function">Anatomy of a Function</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">
+<span class="c1">// func &lt;function name&gt; (&lt;input name&gt;&lt;input type&gt;) &lt;return type&gt; {
+</span><span class="c1">// }
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">average</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span> <span class="kt">float64</span><span class="p">)</span> <span class="kt">float64</span> <span class="p">{</span>
+    <span class="nx">total</span> <span class="o">:=</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="o">+</span> <span class="nx">c</span>
+    <span class="k">return</span> <span class="nx">total</span> <span class="o">/</span> <span class="mi">3</span>
+<span class="p">}</span>
+
+<span class="c1">// You can also specify the name of the return values and create an implicit return of them by just using the return keyword at the end of a function
+</span><span class="c1">// func &lt;function name&gt; (&lt;input name&gt;&lt;input type&gt;) (&lt;return name&gt; &lt;return value&gt;) {
+</span><span class="c1">// }
+</span><span class="c1"></span>
+<span class="kd">func</span> <span class="nf">average</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span> <span class="kt">float64</span><span class="p">)</span> <span class="p">(</span><span class="nx">average</span> <span class="kt">float64</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">total</span> <span class="o">:=</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="o">+</span> <span class="nx">c</span>
+    <span class="nx">average</span> <span class="p">=</span> <span class="nx">total</span> <span class="o">/</span> <span class="mi">3</span>
+    <span class="k">return</span>
+<span class="p">}</span>
+
+<span class="c1">// In order to create a variadic function (variable number of arguments), you can use ... (think of it like the spread operator in JavaScript)
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">average</span><span class="p">(</span><span class="nx">numbers</span> <span class="o">...</span><span class="kt">float64</span><span class="p">)</span> <span class="kt">float64</span> <span class="p">{</span>
+    <span class="c1">// numbers now represents a collection of all of the arguments and can be iterated over
+</span><span class="c1"></span>    <span class="nx">total</span> <span class="o">:=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">val</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">numbers</span> <span class="p">{</span>
+        <span class="nx">total</span> <span class="o">+=</span> <span class="nx">val</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">total</span> <span class="o">/</span> <span class="nb">float64</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nx">numbers</span><span class="p">))</span>
+<span class="p">}</span> 
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="arrays">Arrays</h1>
+<ul>
+<li>Arrays are values, not references</li>
+<li>Passing an array to a function passes a copy of the array, not a reference to it</li>
+<li>The size of an array is part of its type definition and must be specified on creation</li>
+</ul>
+<p>To declare an array and then assign values afterward:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">scores</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kt">float64</span>
+<span class="nx">scores</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mi">9</span>
+<span class="nx">scores</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="mf">1.5</span>
+<span class="nx">scores</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">=</span> <span class="mf">4.5</span>
+<span class="nx">scores</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">=</span> <span class="mi">7</span>
+<span class="nx">scores</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="p">=</span> <span class="mi">8</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>To declare an array and assign:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">scores</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="kt">float64</span> <span class="p">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kt">float64</span><span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">}</span>
+
+<span class="c1">// Since the values you pass in have the array length attached, you can use the shorthand syntax for assignment
+</span><span class="c1"></span><span class="nx">scores</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kt">float64</span><span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">}</span>
+
+<span class="c1">// If you don&#39;t want to have to count how many items you&#39;re adding to the array, you can also use ... to indicate the array length
+</span><span class="c1"></span><span class="nx">scores</span> <span class="o">:=</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span><span class="kt">float64</span><span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">Amy Shackles</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2020-08-19
+        
+    </span>
+  </p>
+  <p class="copyright-item">
+      <span class="item-title">Markdown</span>
+      <span class="item-content"><a class="link-to-markdown" href="https://AmyShackles.github.io/post/getting-going-with-go-part-i/index.md" target="_blank">The Markdown version »</a></span>
+    </p>
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/fmt/">fmt</a>
+          <a href="/tags/arrays/">arrays</a>
+          <a href="/tags/switch/">switch</a>
+          <a href="/tags/range/">range</a>
+          <a href="/tags/for-loops/">for loops</a>
+          </div>
+      <nav class="post-nav">
+        
+        
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/AmyShackles" class="iconfont icon-github" title="github"></a>
+      <a href="https://linkedin.com/in/AmyShackles" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://twitter.com/AmyShackles" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="mailto:amyshackles@gmail.com" class="iconfont icon-email" title="email"></a>
+  <a href="https://AmyShackles.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Amy Shackles</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
